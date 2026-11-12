@@ -1,0 +1,61 @@
+# Flatpak manifest for building this fork locally. Based on
+# https://github.com/flathub/com.github.PintaProject.Pinta, changed to build from
+# the local repo (@REPO_DIR@/@BRANCH@ are filled in by build-and-install.sh)
+# and to fetch NuGet packages over the network instead of a pinned source list.
+app-id: com.github.PintaProject.Pinta
+runtime: org.gnome.Platform
+runtime-version: '50'
+sdk: org.gnome.Sdk
+command: pinta
+sdk-extensions:
+  - org.freedesktop.Sdk.Extension.dotnet10
+finish-args:
+  # X11 + XShm access
+  - --share=ipc
+  - --socket=wayland
+  - --socket=fallback-x11
+  # Network access
+  # for access to the add-ins repo
+  - --share=network
+  # Filesystem access
+  - --filesystem=xdg-desktop
+  - --filesystem=xdg-documents
+  - --filesystem=xdg-download
+  - --filesystem=xdg-pictures
+  - --filesystem=xdg-public-share
+  - --filesystem=xdg-templates
+  - --filesystem=/run/media
+  # GVfs access
+  - --filesystem=xdg-run/gvfs
+  - --filesystem=xdg-run/gvfsd
+  - --talk-name=org.gtk.vfs.*
+  # OpenGL access
+  - --device=dri
+cleanup:
+  - /lib/pkgconfig
+  - /share/man
+  - '*.la'
+modules:
+  - name: Pinta
+    build-options:
+      append-path: /usr/lib/sdk/dotnet10/bin
+      append-ld-library-path: /usr/lib/sdk/dotnet10/lib
+      env:
+        PKG_CONFIG_PATH: /app/lib/pkgconfig:/app/share/pkgconfig:/usr/lib/pkgconfig:/usr/share/pkgconfig:/usr/lib/sdk/dotnet10/lib/pkgconfig
+        DOTNET_CLI_TELEMETRY_OPTOUT: 'true'
+        DOTNET_SKIP_FIRST_TIME_EXPERIENCE: 'true'
+      build-args:
+        - --share=network
+    sources:
+      - type: git
+        url: file://@REPO_DIR@
+        branch: @BRANCH@
+    modules:
+      - shared-modules/intltool/intltool-0.51.json
+  - name: dotnet-runtime
+    buildsystem: simple
+    build-options:
+      no-debuginfo: true
+      strip: true
+    build-commands:
+      - /usr/lib/sdk/dotnet10/bin/install.sh
