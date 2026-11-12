@@ -90,6 +90,7 @@ public sealed class ActionManager
 	public void CreateToolBar (Gtk.Box toolbar)
 	{
 		toolbar.Append (File.New.CreateToolBarItem ());
+		toolbar.Append (Edit.PasteIntoNewImage.CreateToolBarItem ());
 		toolbar.Append (File.Open.CreateToolBarItem ());
 		toolbar.Append (File.Save.CreateToolBarItem ());
 		// Printing is disabled for now until it is fully functional.
@@ -123,6 +124,7 @@ public sealed class ActionManager
 	public void CreateHeaderToolBar (Adw.HeaderBar header)
 	{
 		header.PackStart (File.New.CreateToolBarItem ());
+		header.PackStart (Edit.PasteIntoNewImage.CreateToolBarItem ());
 		header.PackStart (File.Open.CreateToolBarItem ());
 		header.PackStart (File.Save.CreateToolBarItem ());
 

@@ -121,7 +121,7 @@ public sealed class EditActions
 			"pasteintonewimage",
 			Translations.GetString ("Paste Into New Image"),
 			null,
-			Resources.StandardIcons.EditPaste,
+			Resources.StandardIcons.ImageGeneric,
 			shortcuts: ["<Shift>V", "<Primary><Alt>V"]);
 
 		EraseSelection = new Command (
